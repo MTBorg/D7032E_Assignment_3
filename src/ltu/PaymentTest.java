@@ -12,6 +12,8 @@ public class PaymentTest
 {
 		private final int FULL_LOAN = 7088;
 		private final int FULL_SUBSIDY = 2816;
+		private final int LESS_THAN_FULL_TIME_LOAN = 3564;
+		private final int LESS_THAN_FULL_TIME_SUBSIDY = 1396;
 
     @Test
     public void testSilly()
@@ -47,4 +49,25 @@ public class PaymentTest
 				paymentImpl.getMonthlyAmount("19931212-1337", 0, 100, 100), FULL_SUBSIDY + FULL_LOAN
 			);
 		}
+
+	  //  A student studying full time is entitled to 100% subsidiary.
+		@Test
+		public void less_than_full_time_students_loan503() throws IOException{
+			PaymentImpl paymentImpl = new PaymentImpl(getCalendar());
+			assertEquals(
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_SUBSIDY,
+				LESS_THAN_FULL_TIME_LOAN
+			);
+		}
+
+	  //  A student studying full time is entitled to 100% subsidiary.
+		@Test
+		public void less_than_full_time_students_subsidiary504() throws IOException{
+			PaymentImpl paymentImpl = new PaymentImpl(getCalendar());
+			assertEquals(
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_LOAN, 
+				LESS_THAN_FULL_TIME_SUBSIDY
+			);
+		}
+		
 }
