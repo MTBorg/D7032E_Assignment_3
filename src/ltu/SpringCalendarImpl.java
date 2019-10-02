@@ -8,7 +8,8 @@ public class SpringCalendarImpl implements ICalendar
 	@Override
 	public Date getDate() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(2016, 1, 1);
+		cal.set(2016, 0, 1);
 		return cal.getTime();
 	}
+
 }

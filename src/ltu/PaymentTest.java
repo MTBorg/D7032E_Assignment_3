@@ -4,6 +4,7 @@ import static ltu.CalendarFactory.getCalendar;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import static ltu.CalendarFactory.getCalendar;
 
@@ -171,15 +172,21 @@ public class PaymentTest{
     @Test
     public void paid_last_weekday_month_506() throws IOException {
     	
-    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	SpringCalendarImpl spring = new SpringCalendarImpl();
+    	SaturdayCalendarImpl saturday = new SaturdayCalendarImpl();
     	
-    	String paymentDate = payment.getNextPaymentDay();
+    	PaymentImpl paymentSpring = new PaymentImpl(spring);
+    	PaymentImpl paymentSaturday = new PaymentImpl(saturday);
+    	
+    	String paymentDateSpring = paymentSpring.getNextPaymentDay();
+    	String paymentDateSaturday = paymentSaturday.getNextPaymentDay();
     	/**
     	 * [ID: 506] Student loans and subsidiary is paid 
     	 * on the last weekday (Monday to Friday) every month.
+    	 * spring-term of 2016 (2016-01-01 to 2016-06-30)
     	 * */
-    	//assertEquals(payment.getNextPaymentDay(), );
-    	//System.out.println(paymentDate);
-    	assertEquals(paymentDate, "20191031");
+    	assertEquals(paymentDateSpring, "20160129");
+    	assertEquals(paymentDateSaturday, "20160429");
+
     }
 }
