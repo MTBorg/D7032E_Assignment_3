@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import static ltu.CalendarFactory.getCalendar;
+
 import org.junit.Test;
 import ltu.SpringCalendarImpl;
 import ltu.PaymentImpl;
@@ -47,18 +49,6 @@ public class PaymentTest{
     	assertTrue(is_47 == FULL_SUBSIDY);
     }
     
-    @Test
-    // [ID: 401] A student must have completed at least 50% of previous studies in order to receive any subsidiary or student loans.
-    public void compl_ratio401() throws IOException {
-    	PaymentImpl payment = new PaymentImpl(getCalendar());
-    	
-    	int ratio_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 50);
-    	assertTrue(ratio_50 != 0);
-    	
-    	int ratio_LT_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 40);
-    	assertTrue(ratio_LT_50 == 0);
-    }
-    
 
 		// The student must be studying at least half time to receive any subsidiary.
 		@Test
@@ -89,6 +79,51 @@ public class PaymentTest{
 			);
 		}
 
+		@Test
+    public void max_income_301() throws IOException {
+    	
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	/*
+    	 * [ID: 301] A student who is studying full time or more 
+    	 * is permitted to earn a maximum of 85 813SEK per year 
+    	 * in order to receive any subsidiary or student loans.
+    	 * */
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 85814, 100, 100), 0);
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 85814, 150, 100), 0);
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 85813, 100, 100), 7088 + 2816);
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 85813, 150, 100), 7088 + 2816);
+
+    }
+
+    @Test
+    public void max_income_302() throws IOException {
+    	
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	/*
+    	 * [ID: 302] A student who is studying less than full time
+    	 * is allowed to earn a maximum of 128 722SEK per year 
+    	 * in order to receive any subsidiary or student loans.
+    	 * */
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 128723, 99, 100), 0);
+    	assertEquals(payment.getMonthlyAmount("19940902-0000", 128722, 99, 100), 3564 + 1396);
+
+    }
+
+    @Test
+    // [ID: 401] A student must have completed at least 50% of previous studies in order to receive any subsidiary or student loans.
+    public void compl_ratio401() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	int ratio_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 50);
+    	assertTrue(ratio_50 != 0);
+    	
+    	int ratio_LT_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 40);
+    	assertTrue(ratio_LT_50 == 0);
+    }
+    
+
     @Test
     // Full time students
     // [ID: 501] Student loan: 7088 SEK / month
@@ -100,6 +135,27 @@ public class PaymentTest{
     	assertTrue(full_time == FULL_LOAN + FULL_SUBSIDY);
     }
     
+
+	  //  A student studying full time is entitled to 100% subsidiary.
+		@Test
+		public void less_than_full_time_students_loan503() throws IOException{
+			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
+			assertEquals(
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_SUBSIDY,
+				LESS_THAN_FULL_TIME_LOAN
+			);
+		}
+    
+	  //  A student studying full time is entitled to 100% subsidiary.
+		@Test
+		public void less_than_full_time_students_subsidiary504() throws IOException{
+			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
+			assertEquals(
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_LOAN, 
+				LESS_THAN_FULL_TIME_SUBSIDY
+			);
+		}
+
     @Test
     // [ID: 505] A person who is entitled to receive a student loan will always receive the full amount.
     public void full_amount505() throws IOException {
@@ -112,23 +168,18 @@ public class PaymentTest{
     	assertTrue(full_amount_half_time == LESS_THAN_FULL_TIME_LOAN + LESS_THAN_FULL_TIME_SUBSIDY);
     }
 
-	  //  A student studying full time is entitled to 100% subsidiary.
-		@Test
-		public void less_than_full_time_students_loan503() throws IOException{
-			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
-			assertEquals(
-				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_SUBSIDY,
-				LESS_THAN_FULL_TIME_LOAN
-			);
-		}
-
-	  //  A student studying full time is entitled to 100% subsidiary.
-		@Test
-		public void less_than_full_time_students_subsidiary504() throws IOException{
-			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
-			assertEquals(
-				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_LOAN, 
-				LESS_THAN_FULL_TIME_SUBSIDY
-			);
-		}
+    @Test
+    public void paid_last_weekday_month_506() throws IOException {
+    	
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	String paymentDate = payment.getNextPaymentDay();
+    	/**
+    	 * [ID: 506] Student loans and subsidiary is paid 
+    	 * on the last weekday (Monday to Friday) every month.
+    	 * */
+    	//assertEquals(payment.getNextPaymentDay(), );
+    	//System.out.println(paymentDate);
+    	assertEquals(paymentDate, "20191031");
+    }
 }
