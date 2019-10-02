@@ -182,4 +182,37 @@ public class PaymentTest{
     	//System.out.println(paymentDate);
     	assertEquals(paymentDate, "20191031");
     }
+    
+    /**
+     * 
+     * Misc tests
+     * 
+     */
+    
+    @Test (expected = IllegalArgumentException.class)
+    // [ID: MISC] Invalid personID
+    public void input_invalid_personID() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+		// Test if personID wrong format
+    	payment.getMonthlyAmount("123", 0, 100, 100);
+    	
+    	// Test if personID is null
+    	payment.getMonthlyAmount(null, 0, 100, 100);
+    }
+    
+    @Test (expected = IllegalArgumentException.class)
+    // [ID: MISC] Invalid inputs to getMonthlyAmount()
+    public void input_monthly_amount() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	payment.getMonthlyAmount(null, -5, -100, -100);
+    	payment.getMonthlyAmount(null, -5, -100, 100);
+    	payment.getMonthlyAmount(null, -5, 100, -100);
+    	payment.getMonthlyAmount(null, 5, -100, -100);
+    	payment.getMonthlyAmount("19970101-0000", -5, -100, -100);
+    	payment.getMonthlyAmount("19970101-0000", -5, 100, 100);
+    	payment.getMonthlyAmount("19970101-0000", 0, -100, 100);
+    	payment.getMonthlyAmount("19970101-0000", 0, 100, -100);
+    }
 }
