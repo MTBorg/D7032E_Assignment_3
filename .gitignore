@@ -10,6 +10,11 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+jacoco.exec
+bin
+coveragereport
+.classpath
+.project
 # Package Files #
 *.war
 *.nar
