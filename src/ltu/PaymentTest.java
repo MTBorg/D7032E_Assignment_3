@@ -52,4 +52,27 @@ public class PaymentTest
     	int ratio_LT_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 40);
     	assertTrue(ratio_LT_50 == 0);
     }
+    
+    @Test
+    // Full time students
+    // [ID: 501] Student loan: 7088 SEK / month
+    // [ID: 502] Subsidiary: 2816 SEK / month
+    public void full_time_loan501_502() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	int full_time = payment.getMonthlyAmount("19970101-0000", 0, 100, 100);
+    	assertTrue(full_time == 7088 + 2816);
+    }
+    
+    @Test
+    // [ID: 505] A person who is entitled to receive a student loan will always receive the full amount.
+    public void full_amount505() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	int full_amount_full_time = payment.getMonthlyAmount("19970101-0000", 0, 100, 100);
+    	assertTrue(full_amount_full_time == 7088 + 2816);
+    	
+    	int full_amount_half_time = payment.getMonthlyAmount("19970101-0000", 0, 50, 100);
+    	assertTrue(full_amount_half_time == 3564 + 1396);
+    }
 }
