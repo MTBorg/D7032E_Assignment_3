@@ -40,4 +40,16 @@ public class PaymentTest
     	int is_47 = payment.getMonthlyAmount("19720101-0000", 0, 100, 100);
     	assertTrue(is_47 == 2816);
     }
+    
+    @Test
+    // [ID: 401] A student must have completed at least 50% of previous studies in order to receive any subsidiary or student loans.
+    public void compl_ratio401() throws IOException {
+    	PaymentImpl payment = new PaymentImpl(getCalendar());
+    	
+    	int ratio_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 50);
+    	assertTrue(ratio_50 != 0);
+    	
+    	int ratio_LT_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 40);
+    	assertTrue(ratio_LT_50 == 0);
+    }
 }
