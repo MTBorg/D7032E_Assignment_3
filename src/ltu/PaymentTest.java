@@ -25,11 +25,11 @@ public class PaymentTest{
     	
     	// Student under 20
     	int LT_20 = payment.getMonthlyAmount("20000101-0000", 0, 100, 100);
-    	assertTrue(LT_20 == 0);
+    	assertEquals(0, LT_20);
     	
     	// Student over 20
     	int over_20 = payment.getMonthlyAmount("19970101-0000", 0, 100, 100);
-    	assertTrue(over_20 != 0);
+    	assertEquals(FULL_LOAN + FULL_SUBSIDY, over_20);
     }
     
     @Test
@@ -37,8 +37,8 @@ public class PaymentTest{
     public void age_102() throws IOException {
     	PaymentImpl payment = new PaymentImpl(getCalendar());
     	
-    	int is_56 = payment.getMonthlyAmount("19590101-0000", 0, 100, 100);
-    	assertTrue(is_56 == 0);
+    	int is_56 = payment.getMonthlyAmount("19620101-0000", 0, 100, 100);
+    	assertEquals(0, is_56);
     }
     
     @Test
@@ -47,7 +47,7 @@ public class PaymentTest{
     	PaymentImpl payment = new PaymentImpl(getCalendar());
     	
     	int is_47 = payment.getMonthlyAmount("19720101-0000", 0, 100, 100);
-    	assertTrue(is_47 == FULL_SUBSIDY);
+    	assertEquals(FULL_SUBSIDY, is_47);
     }
     
 
@@ -116,10 +116,10 @@ public class PaymentTest{
     	PaymentImpl payment = new PaymentImpl(getCalendar());
     	
     	int ratio_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 50);
-    	assertTrue(ratio_50 != 0);
+    	assertEquals(FULL_LOAN + FULL_SUBSIDY, ratio_50);
     	
     	int ratio_LT_50 = payment.getMonthlyAmount("19970101-0000", 0, 100, 40);
-    	assertTrue(ratio_LT_50 == 0);
+    	assertEquals(0, ratio_LT_50);
     }
     
 
@@ -131,7 +131,7 @@ public class PaymentTest{
     	PaymentImpl payment = new PaymentImpl(getCalendar());
     	
     	int full_time = payment.getMonthlyAmount("19970101-0000", 0, 100, 100);
-    	assertTrue(full_time == FULL_LOAN + FULL_SUBSIDY);
+    	assertEquals(FULL_LOAN + FULL_SUBSIDY, full_time);
     }
     
 
@@ -161,10 +161,10 @@ public class PaymentTest{
     	PaymentImpl payment = new PaymentImpl(getCalendar());
     	
     	int full_amount_full_time = payment.getMonthlyAmount("19970101-0000", 0, 100, 100);
-    	assertTrue(full_amount_full_time == FULL_LOAN + FULL_SUBSIDY);
+    	assertEquals(FULL_LOAN + FULL_SUBSIDY, full_amount_full_time);
     	
     	int full_amount_half_time = payment.getMonthlyAmount("19970101-0000", 0, 50, 100);
-    	assertTrue(full_amount_half_time == LESS_THAN_FULL_TIME_LOAN + LESS_THAN_FULL_TIME_SUBSIDY);
+    	assertEquals(LESS_THAN_FULL_TIME_LOAN + LESS_THAN_FULL_TIME_SUBSIDY, full_amount_half_time);
     }
 
     @Test
