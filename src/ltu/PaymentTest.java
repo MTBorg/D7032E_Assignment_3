@@ -55,8 +55,8 @@ public class PaymentTest{
 		@Test
 		public void minimumStudyPace201() throws IOException{
 			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
-			assertEquals(paymentImpl.getMonthlyAmount("19901212-1337", 0, 50, 100), LESS_THAN_FULL_TIME_LOAN + LESS_THAN_FULL_TIME_SUBSIDY);
-			assertEquals(paymentImpl.getMonthlyAmount("19901212-1337", 0, 49, 100), 0);
+			assertEquals(LESS_THAN_FULL_TIME_LOAN + LESS_THAN_FULL_TIME_SUBSIDY, paymentImpl.getMonthlyAmount("19901212-1337", 0, 50, 100));
+			assertEquals(0, paymentImpl.getMonthlyAmount("19901212-1337", 0, 49, 100));
 		}
 
 	  // A student studying less than full time is entitled to 50% subsidiary.
@@ -64,8 +64,8 @@ public class PaymentTest{
 		public void less_than_full_time_half_subsidiary202() throws IOException{
 			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
 			assertEquals(
-				paymentImpl.getMonthlyAmount("19931212-1337", 0, 50, 100) - LESS_THAN_FULL_TIME_LOAN,
-					LESS_THAN_FULL_TIME_SUBSIDY
+				LESS_THAN_FULL_TIME_SUBSIDY,
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 51, 100) - LESS_THAN_FULL_TIME_LOAN
 			);
 		}
 
@@ -74,7 +74,8 @@ public class PaymentTest{
 		public void full_time_full_subsidiary203() throws IOException{
 			PaymentImpl paymentImpl = new PaymentImpl(new SpringCalendarImpl());
 			assertEquals(
-				paymentImpl.getMonthlyAmount("19931212-1337", 0, 100, 100), FULL_SUBSIDY + FULL_LOAN
+				FULL_SUBSIDY + FULL_LOAN,
+				paymentImpl.getMonthlyAmount("19931212-1337", 0, 100, 100)
 			);
 		}
 
